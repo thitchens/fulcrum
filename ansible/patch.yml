@@ -1,0 +1,6 @@
+#Run OS patching on all servers
+#Patching with ansible is not the most ideal solution, but it does work and is easy for small scale deployments
+- hosts: all
+  roles:
+    - patch
+  become: True
