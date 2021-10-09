@@ -1,0 +1,9 @@
+- name: Run apt update
+  command: apt update
+  become: true
+
+- name: Run apt upgrade
+  command: apt upgrade -y
+  become: true
+  notify:
+    - reboot server
