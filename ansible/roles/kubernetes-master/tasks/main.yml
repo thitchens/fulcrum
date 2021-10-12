@@ -12,16 +12,26 @@
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --config /tmp/kubeadm-config.yaml
 
-- name: Setup kubeconfig for feeble user
+- name: Setup kubeconfig for {{ ansible_user }} user
   command: "{{ item }}"
   with_items:
-   - mkdir -p /home/feeble/.kube
-   - cp -i /etc/kubernetes/admin.conf /home/feeble/.kube/config
-   - chown feeble:feeble /home/feeble/.kube/config
+   - mkdir -p /home/{{ ansible_user }}/.kube
+   - cp -i /etc/kubernetes/admin.conf /home/{{ ansible_user }}/.kube/config
+   - chown feeble:feeble /home/{{ ansible_user }}/.kube/config
 
-- name: Install calico pod network
+#This is out of date and does not install properly
+#- name: Install calico pod network
+#  become: false
+#  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
+
+#Adding the manifests from this doc https://docs.projectcalico.org/getting-started/kubernetes/quickstart
+- name: Install tigera-operator
   become: false
-  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
+  command: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+
+- name: Install custom-resources
+  become: false
+  command: kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
