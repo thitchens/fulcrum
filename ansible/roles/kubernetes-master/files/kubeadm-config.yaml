@@ -1,0 +1,13 @@
+# kubeadm-config.yaml
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+#kubernetesVersion: v1.21.0
+podNetworkCidr: 192.168.1.0/24
+nodeName: kubernetes-master
+apiserverCertExtraSans: 192.168.1.111
+apiserverAdvertiseAddress: 192.168.1.111
+
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: cgroupfs

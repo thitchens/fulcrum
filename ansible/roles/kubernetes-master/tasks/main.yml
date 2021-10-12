@@ -1,14 +1,23 @@
-#This is pulled from https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-feeble/
+#This is based on https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-feeble/
 #Only modifying the user, because I am not using vagrant
+
+- name: Copy kubeadm config file
+  ansible.builtin.copy:
+    src: roles/kubernetes-master/files/kubeadm-config.yaml
+    dest: /tmp/kubeadm-config.yaml
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Initialize the Kubernetes cluster using kubeadm
-    command: kubeadm init --apiserver-advertise-address="192.168.1.111" --apiserver-cert-extra-sans="192.168.1.111"  --node-name k8s-master --pod-network-cidr=192.168.1.0/24
+  command: kubeadm init --config /tmp/kubeadm-config.yaml
 
 - name: Setup kubeconfig for feeble user
-   command: "{{ item }}"
-   with_items:
-    - mkdir -p /home/feeble/.kube
-    - cp -i /etc/kubernetes/admin.conf /home/feeble/.kube/config
-    - chown feeble:feeble /home/feeble/.kube/config
+  command: "{{ item }}"
+  with_items:
+   - mkdir -p /home/feeble/.kube
+   - cp -i /etc/kubernetes/admin.conf /home/feeble/.kube/config
+   - chown feeble:feeble /home/feeble/.kube/config
 
 - name: Install calico pod network
   become: false
@@ -21,6 +30,3 @@
 - name: Copy join command to local file
   local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./artifacts/join-command"
 
-handlers:
-  - name: docker status
-    service: name=docker state=started
