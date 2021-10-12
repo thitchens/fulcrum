@@ -1,0 +1,10 @@
+#Run OS patching on all servers
+#Patching with ansible is not the most ideal solution, but it does work and is easy for small scale deployments
+- hosts: kubernetes-master
+  become: True
+  tasks:
+  - name: Test ansible_host in output
+    command: echo {{ ansible_host }}
+    register: hello
+  - debug: msg="{{ hello.stdout }}"
+  - debug: msg="{{ hello.stderr }}"
