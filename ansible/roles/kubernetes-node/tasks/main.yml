@@ -1,4 +1,5 @@
-#This is pulled from https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant/
+#This is based on https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant/
+
 - name: Copy the join command to server location
   copy: src=artifacts/join-command dest=/tmp/join-command.sh mode=0777
 
