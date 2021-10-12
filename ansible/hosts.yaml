@@ -1,0 +1,15 @@
+---
+kubernetes:
+  children:
+    kubernetes-master:
+      hosts:
+        kubernetes1:
+          ansible_host: "192.168.1.111"
+    kubernetes-nodes:
+      hosts:
+        kubernetes2:
+          ansible_host: "192.168.1.112"
+        kubernetes3:
+          ansible_host: "192.168.1.113"
+  vars:
+    remote_user: feeble

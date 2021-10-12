@@ -8,3 +8,9 @@
     register: hello
   - debug: msg="{{ hello.stdout }}"
   - debug: msg="{{ hello.stderr }}"
+
+  - name: Test remote_user in output
+    command: echo {{ remote_user }}
+    register: user
+  - debug: msg="{{ user.stdout }}"
+  - debug: msg="{{ user.stderr }}"
