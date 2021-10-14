@@ -12,12 +12,12 @@
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --config /tmp/kubeadm-config.yaml
 
-- name: Setup kubeconfig for {{ ansible_user }} user
+- name: Setup kubeconfig for {{ kubernetes_user }} user
   command: "{{ item }}"
   with_items:
-   - mkdir -p /home/{{ ansible_user }}/.kube
-   - cp -i /etc/kubernetes/admin.conf /home/{{ ansible_user }}/.kube/config
-   - chown feeble:feeble /home/{{ ansible_user }}/.kube/config
+   - mkdir -p /home/{{ kubernetes_user }}/.kube
+   - cp -i /etc/kubernetes/admin.conf /home/{{ kubernetes_user }}/.kube/config
+   - chown feeble:feeble /home/{{ kubernetes_user }}/.kube/config
 
 #This is out of date and does not install properly
 #- name: Install calico pod network
