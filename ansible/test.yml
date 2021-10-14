@@ -2,6 +2,8 @@
 #Patching with ansible is not the most ideal solution, but it does work and is easy for small scale deployments
 - hosts: kubernetes-master
   become: True
+  vars:
+    kubernetes_user: ubuntu
   tasks:
   - name: Test ansible_host in output
     command: echo {{ ansible_host }}
@@ -9,8 +11,8 @@
   - debug: msg="{{ hello.stdout }}"
   - debug: msg="{{ hello.stderr }}"
 
-  - name: Test remote_user in output
-    command: echo {{ remote_user }}
+  - name: Test kubernetes_user in output
+    command: echo {{ kubernetes_user }}
     register: user
   - debug: msg="{{ user.stdout }}"
   - debug: msg="{{ user.stderr }}"
