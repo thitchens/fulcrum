@@ -17,7 +17,7 @@
   with_items:
    - mkdir -p /home/{{ kubernetes_user }}/.kube
    - cp -i /etc/kubernetes/admin.conf /home/{{ kubernetes_user }}/.kube/config
-   - chown feeble:feeble /home/{{ kubernetes_user }}/.kube/config
+   - chown {{ kubernetes_user }}:{{ kubernetes_user }} /home/{{ kubernetes_user }}/.kube/config
 
 #This is out of date and does not install properly
 #- name: Install calico pod network
