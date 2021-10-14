@@ -1,0 +1,7 @@
+- hosts: kubernetes-master
+  become: True
+  roles:
+    - kubernetes-common
+    - kubernetes-master
+  vars:
+    kubernetes_user: ubuntu

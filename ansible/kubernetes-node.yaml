@@ -1,0 +1,5 @@
+- hosts: kubernetes-node
+  become: True
+  roles:
+    - kubernetes-common
+    - kubernetes-node
