@@ -1,0 +1,34 @@
+# IMAGE_NAME = "~/ISO/Ubuntu_20.04.2_VB_LinuxVMImages.COM.ova"
+IMAGE_NAME = "generic/ubuntu2010"
+N = 2
+
+Vagrant.configure("2") do |config|
+    config.ssh.insert_key = false
+
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 2048
+        v.cpus = 2
+    end
+
+    config.vm.define "kubernetes-master" do |master|
+        master.vm.box = IMAGE_NAME
+#         master.vm.network "public_network", ip: "192.168.1.150"
+        master.vm.network "public_network", bridge: "wlp0s20f3", ip: "192.168.1.150"
+        master.vm.hostname = "kubernetes-master"
+        master.vm.provision "ansible" do |ansible|
+            ansible.playbook = "kubernetes-master.yaml"
+        end
+    end
+
+    (1..N).each do |i|
+        config.vm.define "kubernetes-node-#{i}" do |node|
+            node.vm.box = IMAGE_NAME
+#             node.vm.network "bridged", ip: "192.168.1.#{i + 150}"
+            node.vm.network "public_network", bridge: "wlp0s20f3", ip: "192.168.1.150"
+            node.vm.hostname = "kubernetes-node-#{i}"
+            node.vm.provision "ansible" do |ansible|
+                ansible.playbook = "kubernetes-node.yaml"
+            end
+        end
+    end
+end
