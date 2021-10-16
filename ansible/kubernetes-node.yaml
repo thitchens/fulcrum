@@ -3,3 +3,5 @@
   roles:
     - kubernetes-common
     - kubernetes-node
+  vars:
+    kubernetes_user: vagrant
