@@ -4,4 +4,4 @@
     - kubernetes-common
     - kubernetes-master
   vars:
-    kubernetes_user: ubuntu
+    kubernetes_user: vagrant
