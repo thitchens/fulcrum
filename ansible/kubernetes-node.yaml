@@ -1,4 +1,4 @@
-- hosts: kubernetes-node
+- hosts: kubernetes-nodes
   become: True
   roles:
     - kubernetes-common
