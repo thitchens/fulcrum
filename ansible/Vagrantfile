@@ -1,6 +1,9 @@
-# IMAGE_NAME = "~/ISO/Ubuntu_20.04.2_VB_LinuxVMImages.COM.ova"
 IMAGE_NAME = "generic/ubuntu2010"
 N = 2
+
+$script = <<-SCRIPT
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPEeCSCFXmB3eI1aeknr5vDh+T9Zy5xk5bTBEwyVqF8HMqJNpq2rf3onx7CbmvYB6c2z1o0167eS2uAlAYJg3XHH1iLEBYAAO+A8z+UF7cBP3GhSRmAdC7VDCEZrvSZJ/nnYX8VB+FjHfYv6HIngKRLNOrXjn4OnmmJHWjLaeR7hdLkkFC0D3k9fHt2+mAOXIrwzFAuEGb9RRT3iHKPNkr6jjulZwTBrspnOpLzEIUQtT/oouBsb3exOuJ3/G0SbkavbJKgX+ijXZe7xifWNaWYewuOWAwzfLuERHk1WewmsOE7x/2B8wlFvxKHK9cpq1WYSzCoLxPBiEFTKhuA95J" >> /home/vagrant/.ssh/authorized_keys
+SCRIPT
 
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
@@ -12,23 +15,23 @@ Vagrant.configure("2") do |config|
 
     config.vm.define "kubernetes-master" do |master|
         master.vm.box = IMAGE_NAME
-#         master.vm.network "public_network", ip: "192.168.1.150"
         master.vm.network "public_network", bridge: "wlp0s20f3", ip: "192.168.1.150"
         master.vm.hostname = "kubernetes-master"
-        master.vm.provision "ansible" do |ansible|
-            ansible.playbook = "kubernetes-master.yaml"
-        end
+        config.vm.provision "shell", inline: $script
+#         master.vm.provision "ansible" do |ansible|
+#             ansible.playbook = "kubernetes-master.yaml"
+#         end
     end
 
     (1..N).each do |i|
         config.vm.define "kubernetes-node-#{i}" do |node|
             node.vm.box = IMAGE_NAME
-#             node.vm.network "bridged", ip: "192.168.1.#{i + 150}"
-            node.vm.network "public_network", bridge: "wlp0s20f3", ip: "192.168.1.150"
+            node.vm.network "public_network", bridge: "wlp0s20f3", ip: "192.168.1.#{i + 150}"
             node.vm.hostname = "kubernetes-node-#{i}"
-            node.vm.provision "ansible" do |ansible|
-                ansible.playbook = "kubernetes-node.yaml"
-            end
+            config.vm.provision "shell", inline: $script
+#             node.vm.provision "ansible" do |ansible|
+#                 ansible.playbook = "kubernetes-node.yaml"
+#             end
         end
     end
 end
