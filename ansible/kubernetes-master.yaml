@@ -4,4 +4,4 @@
     - kubernetes-common
     - kubernetes-master
   vars:
-    kubernetes_user: vagrant
+    kubernetes_user: ansible
