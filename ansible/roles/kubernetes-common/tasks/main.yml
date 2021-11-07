@@ -2,7 +2,7 @@
 #Only modifying the user, because I am not using vagrant
 
 - name: Install packages that allow apt to be used over HTTPS
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
     update_cache: yes
@@ -15,17 +15,17 @@
     - software-properties-common
 
 - name: Add an apt signing key for Docker
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
 - name: Add apt repository for stable version
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
     state: present
 
 - name: Install docker and its dependecies
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
     update_cache: yes
@@ -38,13 +38,13 @@
     - docker status
 
 - name: Add {{ kubernetes_user }} user to docker group
-  user:
+  ansible.builtin.user:
     name: "{{ kubernetes_user }}"
     group: docker
 
 #Kubelet will not start if swap is enabled
 - name: Remove swapfile from /etc/fstab
-  mount:
+  ansible.builtin.mount:
     name: "{{ item }}"
     fstype: swap
     state: absent
@@ -57,19 +57,19 @@
   when: ansible_swaptotal_mb > 0
 
 - name: Add an apt signing key for Kubernetes
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
 
 #Install kubelet, kubeadm, and kubectl
 - name: Adding apt repository for Kubernetes
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
     filename: kubernetes.list
 
 - name: Install Kubernetes binaries
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
     update_cache: yes
@@ -78,6 +78,18 @@
       - kubelet
       - kubeadm
       - kubectl
+
+- name: Install pip
+  ansible.builtin.apt:
+    name: python-pip
+    state: present
+    update_cache: yes
+
+- name: Install pip dependencies
+  ansible.builtin.pip:
+    name:
+      - openshift
+      - pyyaml
 
 #- name: Ensure kubelet config file exists
 #  file:
