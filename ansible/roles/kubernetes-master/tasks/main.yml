@@ -11,19 +11,20 @@
 
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --config /tmp/kubeadm-config.yaml
+  ignore_errors: yes
 
 - name: Create Kubernetes user
   ansible.builtin.user:
-    name: {{ kubernetes_user }}
+    name: "{{ kubernetes_user }}"
     group: docker
 
 - name: Copy Kubernetes admin config
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
-    dest: /home{{ kubernetes-user }}/.kube/config
+    dest: /home/{{ kubernetes_user }}/.kube/config
     remote_src: yes
-    owner: {{ kubernetes_user }}
-    group: {{ kubernetes_user }}
+    owner: "{{ kubernetes_user }}"
+    group: "{{ kubernetes_user }}"
 
 #This is out of date and does not install properly
 #- name: Install calico pod network
