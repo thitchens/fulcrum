@@ -4,4 +4,4 @@
     - kubernetes-common
     - kubernetes-master
   vars:
-    kubernetes_user: ansible
+    kubernetes_user: feeble
