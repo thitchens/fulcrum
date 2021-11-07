@@ -13,10 +13,21 @@
   command: kubeadm init --config /tmp/kubeadm-config.yaml
   ignore_errors: yes
 
+- name: Create Kubernetes user group
+  ansible.builtin.group:
+    name: "{{ kubernetes_user }}"
+
 - name: Create Kubernetes user
   ansible.builtin.user:
     name: "{{ kubernetes_user }}"
-    group: docker
+    groups: docker, {{ kubernetes_user}}
+
+- name: Create .kube directory for Kubernetes user
+  ansible.builtin.file:
+    path: /home/{{ kubernetes_user }}/.kube
+    state: directory
+    owner: "{{ kubernetes_user }}"
+    group: "{{ kubernetes_user }}"
 
 - name: Copy Kubernetes admin config
   ansible.builtin.copy:
