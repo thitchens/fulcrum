@@ -13,15 +13,6 @@
   command: kubeadm init --config /tmp/kubeadm-config.yaml
   ignore_errors: yes
 
-- name: Create Kubernetes user group
-  ansible.builtin.group:
-    name: "{{ kubernetes_user }}"
-
-- name: Create Kubernetes user
-  ansible.builtin.user:
-    name: "{{ kubernetes_user }}"
-    groups: docker, {{ kubernetes_user}}
-
 - name: Create .kube directory for Kubernetes user
   ansible.builtin.file:
     path: /home/{{ kubernetes_user }}/.kube
@@ -43,13 +34,27 @@
 #  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
 
 #Adding the manifests from this doc https://docs.projectcalico.org/getting-started/kubernetes/quickstart
-- name: Install tigera-operator
-  become: false
-  command: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+- name: Download tigera-operator manifest file
+  ansible.builtin.get_url:
+    url: https://docs.projectcalico.org/manifests/tigera-operator.yaml
+    dest: /tmp/tigera-operator.yaml
+    mode: '0664'
 
-- name: Install custom-resources
-  become: false
-  command: kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+- name: Apply tigera-operator manifest file
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/tigera-operator.yaml
+
+- name: Download custom-resources manifest file
+  ansible.builtin.get_url:
+    url: https://docs.projectcalico.org/manifests/custom-resources.yaml
+    dest: /tmp/custom-resources.yaml
+    mode: '0664'
+
+- name: Apply custom-resources manifest file
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/custom-resources.yaml
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
