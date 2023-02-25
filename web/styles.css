@@ -1,0 +1,40 @@
+:root {
+    /* https://colorhunt.co/palette/7579e79ab3f5a3d8f4b9fffc */
+    --bg-color: #7579E7;
+    --header: #9AB3F5;
+    --main: #A3D8F4;
+    --accent: #B9FFFC;
+
+    /* https://colorhunt.co/palette/f67280c06c846c5b7b355c7d */
+    /* --bg-color: #355C7D; */
+    /* --header: #C06C84; */
+    /* --main: #F67280; */
+    /* --accent: #6C5B7B; */
+}
+
+* {
+    font-family: "Source Code Pro", "Times New Roman", sans-serif;
+    text-align: center;
+    margin: auto;
+    border: 0;
+    padding: 0;
+    background: var(--bg-color);
+}
+
+.header-bar {
+    display: flex;
+    background: var(--header);
+    width: 100%;
+    min-height: 50px;
+    top: 0;
+    left: 0;
+    position: fixed;
+    font-size: 32px;
+    z-index: 5;
+}
+
+.header-logo-text, .header-spacer, .header-links, .header-link{
+    display: flex;
+    flex: 1;
+    background: transparent;
+}
