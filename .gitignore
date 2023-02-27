@@ -1,3 +1,6 @@
 .idea
 ansible/.vagrant/
 ansible/artifacts
+
+fulcrum
+*.log

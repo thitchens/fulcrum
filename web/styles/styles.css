@@ -1,24 +1,33 @@
 :root {
     /* https://colorhunt.co/palette/7579e79ab3f5a3d8f4b9fffc */
-    --bg-color: #7579E7;
-    --header: #9AB3F5;
-    --main: #A3D8F4;
-    --accent: #B9FFFC;
+    /* --bg-color: #7579E7; */
+    /* --header: #9AB3F5; */
+    /* --main: #A3D8F4; */
+    /* --accent: #B9FFFC; */
 
     /* https://colorhunt.co/palette/f67280c06c846c5b7b355c7d */
     /* --bg-color: #355C7D; */
     /* --header: #C06C84; */
     /* --main: #F67280; */
     /* --accent: #6C5B7B; */
+
+    /* https://colorhunt.co/palette/16213e0f3460533483e94560 */
+    --bg-color: #16213E;
+    --header: #533483;
+    --main: #E94560;
+    --accent: #0F3460;
 }
 
 * {
-    font-family: "Source Code Pro", "Times New Roman", sans-serif;
+    /* font-family: "Source Code Pro", "Times New Roman", sans-serif; */
+    /* font-family: "Luminari", "Times New Roman", sans-serif; */
+    font-family: "Courier", "Times New Roman", sans-serif;
     text-align: center;
     margin: auto;
     border: 0;
     padding: 0;
     background: var(--bg-color);
+    color: var(--main);
 }
 
 .header-bar {
@@ -33,8 +42,16 @@
     z-index: 5;
 }
 
-.header-logo-text, .header-spacer, .header-links, .header-link{
+.header-logo-text,
+.header-spacer,
+.header-links,
+.header-link {
     display: flex;
     flex: 1;
     background: transparent;
+}
+
+.header-link:hover {
+    color: #6082B6;
+    text-shadow: 0 0 5px var(--accent);
 }
