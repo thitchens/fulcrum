@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
 	"time"
@@ -34,6 +33,7 @@ func main() {
 	files := http.FileServer(http.Dir(config.Static))
 	mux.Handle("/static/", http.StripPrefix("/static/", files))
 
+	// Defined in route_main.go
 	mux.HandleFunc("/", rootHandler)
 
 	server := &http.Server{
@@ -77,20 +77,4 @@ func loadConfig() (*Configuration, error) {
 	}
 
 	return config, err
-}
-
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-	rootTemplate := "web/templates/index.html"
-	t, err := template.ParseFiles(rootTemplate)
-	if err != nil {
-		logger.Error("cannot parse root template",
-			zap.String("error", err.Error()),
-		)
-	}
-	err = t.Execute(w, r)
-	if err != nil {
-		logger.Error("cannot execute root template",
-			zap.String("error", err.Error()),
-		)
-	}
 }
