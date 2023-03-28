@@ -2,7 +2,10 @@ module github.com/afeeblechild/fulcrum
 
 go 1.18
 
-require go.uber.org/zap v1.24.0
+require (
+	github.com/lib/pq v1.10.7
+	go.uber.org/zap v1.24.0
+)
 
 require (
 	go.uber.org/atomic v1.7.0 // indirect

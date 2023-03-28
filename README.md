@@ -20,3 +20,16 @@ exit
 
 psql -d fulcrum -f setup.sql
 ```
+
+```bash
+sudo apt install postgresql postgresql-contrib
+sudo service postgresql start
+
+sudo -iu postgres
+createuser --interactive
+createdb <username>
+createdb fulcrum
+exit
+
+psql -d fulcrum -f setup.sql
+```
