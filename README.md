@@ -1,5 +1,12 @@
 # fulcrum
 
+## db.yaml
+```yaml
+Dbname: 
+Username: 
+Password: 
+```
+
 ## Postgresql Setup
 
 ```bash

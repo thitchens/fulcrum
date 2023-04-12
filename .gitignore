@@ -2,5 +2,6 @@
 ansible/.vagrant/
 ansible/artifacts
 
+db.yaml
 fulcrum
 *.log

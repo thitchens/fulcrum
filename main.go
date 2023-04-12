@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/afeeblechild/fulcrum/lib"
+	"github.com/afeeblechild/fulcrum/lib/db"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 )
@@ -53,6 +54,10 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	err = db.Init()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func buildLogger() (*zap.Logger, error) {
@@ -61,11 +66,11 @@ func buildLogger() (*zap.Logger, error) {
 	return cfg.Build()
 }
 
-func loadConfig() (*Configuration, error) {
+func loadConfig() error {
 	file, err := os.Open("config.yaml")
 
 	if err != nil {
-		return nil, fmt.Errorf("cannot open config file: %v", err)
+		return fmt.Errorf("cannot open config file: %v", err)
 	}
 
 	decoder := yaml.NewDecoder(file)
@@ -73,8 +78,8 @@ func loadConfig() (*Configuration, error) {
 	err = decoder.Decode(config)
 
 	if err != nil {
-		return nil, fmt.Errorf("cannot get configuration from file: %v", err)
+		return fmt.Errorf("cannot get configuration from file: %v", err)
 	}
 
-	return config, err
+	return err
 }
