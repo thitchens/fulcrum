@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -9,13 +8,14 @@ import (
 
 	"github.com/afeeblechild/fulcrum/lib"
 	"go.uber.org/zap"
+	"gopkg.in/yaml.v3"
 )
 
 type Configuration struct {
-	Address      string
-	ReadTimeout  int64
-	WriteTimeout int64
-	Static       string
+	Address      string `yaml:"Address"`
+	ReadTimeout  int64  `yaml:"ReadTimeout"`
+	WriteTimeout int64  `yaml:"WriteTimeout"`
+	Static       string `yaml:"Static"`
 }
 
 var (
@@ -62,15 +62,16 @@ func buildLogger() (*zap.Logger, error) {
 }
 
 func loadConfig() (*Configuration, error) {
-	file, err := os.Open("config.json")
+	file, err := os.Open("config.yaml")
 
 	if err != nil {
 		return nil, fmt.Errorf("cannot open config file: %v", err)
 	}
 
-	decoder := json.NewDecoder(file)
+	decoder := yaml.NewDecoder(file)
 	config = &Configuration{}
 	err = decoder.Decode(config)
+	fmt.Println(config.Address)
 
 	if err != nil {
 		return nil, fmt.Errorf("cannot get configuration from file: %v", err)
