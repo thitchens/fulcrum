@@ -71,7 +71,6 @@ func loadConfig() (*Configuration, error) {
 	decoder := yaml.NewDecoder(file)
 	config = &Configuration{}
 	err = decoder.Decode(config)
-	fmt.Println(config.Address)
 
 	if err != nil {
 		return nil, fmt.Errorf("cannot get configuration from file: %v", err)
