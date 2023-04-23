@@ -3,10 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 
+	"github.com/afeeblechild/fulcrum/lib/log"
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v3"
 )
 
@@ -31,7 +32,7 @@ func Init() error {
 	connect := fmt.Sprintf("dbname=%s sslmode=disable user=%s password=%s", dbconfig.DbName, dbconfig.Username, dbconfig.Password)
 	Db, err = sql.Open("postgres", connect)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	return err
 }
@@ -52,4 +53,12 @@ func loadConfig() error {
 	}
 
 	return err
+}
+
+func Encrypt(value string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
+	if err != nil {
+		log.Error(err.Error())
+	}
+	return string(hash)
 }

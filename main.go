@@ -8,6 +8,7 @@ import (
 
 	"github.com/afeeblechild/fulcrum/lib"
 	"github.com/afeeblechild/fulcrum/lib/db"
+	"github.com/afeeblechild/fulcrum/lib/log"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 )
@@ -49,8 +50,7 @@ func main() {
 
 func init() {
 	loadConfig()
-	var err error
-	logger, err = buildLogger()
+	err := log.Init()
 	if err != nil {
 		panic(err)
 	}
@@ -58,12 +58,6 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-}
-
-func buildLogger() (*zap.Logger, error) {
-	cfg := zap.NewProductionConfig()
-	cfg.OutputPaths = []string{"fulcrum.log", "stderr"}
-	return cfg.Build()
 }
 
 func loadConfig() error {
