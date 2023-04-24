@@ -21,7 +21,6 @@ func Init() error {
 }
 
 func buildLogger() (*zap.Logger, error) {
-	// TODO figure out how to trim build path from stack trace
 	cfg := zap.NewProductionConfig()
 	cfg.OutputPaths = []string{"fulcrum.log", "stderr"}
 	return cfg.Build()

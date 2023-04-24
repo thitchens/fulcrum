@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"time"
 
 	"github.com/afeeblechild/fulcrum/lib/log"
@@ -28,14 +29,8 @@ type (
 
 func (user *User) Create() error {
 	statement := "insert into users (uuid, name, email, password, created_at) values ($1, $2, $3, $4, $5) returning id, uuid, created_at"
-	prepared, err := Db.Prepare(statement)
-	if err != nil {
-		log.Error(err.Error())
-	}
-	defer prepared.Close()
 
-	// use QueryRow to return a row and scan the returned id into the User struct
-	err = prepared.QueryRow(uuid.New(), user.Name, user.Email, Encrypt(user.Password), time.Now()).Scan(&user.Id, &user.Uuid, &user.CreatedAt)
+	err := DatabasePool.QueryRow(context.TODO(), statement, uuid.New(), user.Name, user.Email, Encrypt(user.Password), time.Now().UTC()).Scan(&user.Id, &user.Uuid, &user.CreatedAt)
 	if err != nil {
 		log.Error(err.Error())
 	}

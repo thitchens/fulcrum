@@ -1,27 +1,32 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"os"
 
 	"github.com/afeeblechild/fulcrum/lib/log"
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/yaml.v3"
 )
 
 type (
-	DBConfiguration struct {
-		DbName   string `yaml:"Dbname"`
-		Password string `yaml:"Password"`
-		Username string `yaml:"Username"`
+	Database struct {
+		DatabaseName string `yaml:"DatabaseName"`
+		DatabaseType string `yaml:"DatabaseType"` //Supported types: postgres
+		Endpoint     string `yaml:"Endpoint"`
+		Password     string `yaml:"Password"`
+		Port         string `yaml:"Port"`
+		Username     string `yaml:"Username"`
+		Url          string
 	}
 )
 
 var (
-	dbconfig *DBConfiguration
-	Db       *sql.DB
+	DatabaseConfig *Database
+	DatabasePool   *pgxpool.Pool
 )
 
 func Init() error {
@@ -29,12 +34,20 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	connect := fmt.Sprintf("dbname=%s sslmode=disable user=%s password=%s", dbconfig.DbName, dbconfig.Username, dbconfig.Password)
-	Db, err = sql.Open("postgres", connect)
+	DatabaseConfig.SetUrl()
+
+	// pgxpool.New() creates a concurrency safe connection pool to use
+	DatabasePool, err = pgxpool.New(context.Background(), DatabaseConfig.Url)
 	if err != nil {
-		log.Fatal(err.Error())
+		panic(err)
 	}
 	return err
+}
+
+func (d *Database) SetUrl() {
+	// urlExample := "postgres://username:password@localhost:5432/database_name"
+	// postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
+	d.Url = "postgres://" + d.Username + ":" + d.Password + "@" + d.Endpoint + ":" + d.Port + "/" + d.DatabaseName
 }
 
 func loadConfig() error {
@@ -45,8 +58,8 @@ func loadConfig() error {
 	}
 
 	decoder := yaml.NewDecoder(file)
-	dbconfig = &DBConfiguration{}
-	err = decoder.Decode(dbconfig)
+	DatabaseConfig = &Database{}
+	err = decoder.Decode(DatabaseConfig)
 
 	if err != nil {
 		return fmt.Errorf("cannot get configuration from file: %v", err)

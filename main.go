@@ -27,6 +27,7 @@ var (
 
 func main() {
 	defer logger.Sync()
+	defer db.DatabasePool.Close()
 
 	fmt.Println("fulcrum", lib.Version(), "started at", config.Address)
 
