@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 	"time"
@@ -38,6 +39,8 @@ func main() {
 
 	// Defined in route_main.go
 	mux.HandleFunc("/", rootHandler)
+	// mux.HandleFunc("/authenticate", authenticateHandler)
+	// mux.HandleFunc("/signup", signupHandler)
 
 	server := &http.Server{
 		Addr:           config.Address,
@@ -76,5 +79,19 @@ func loadConfig() error {
 		return fmt.Errorf("cannot get configuration from file: %v", err)
 	}
 
+	return err
+}
+
+func generateHTML(writer http.ResponseWriter, data interface{}, filenames ...string) error {
+	var files []string
+	for _, file := range filenames {
+		files = append(files, fmt.Sprintf("web/templates/%s.html", file))
+	}
+
+	templates := template.Must(template.ParseFiles(files...))
+	err := templates.ExecuteTemplate(writer, "layout", data)
+	if err != nil {
+		log.Error(err.Error())
+	}
 	return err
 }

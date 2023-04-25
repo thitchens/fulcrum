@@ -1,5 +1,5 @@
 {{ define "content" }}
-<p class="body">
+<p class="lead">
   <a href="/thread/new">Start a thread</a> or join one below!
 </p>
 
