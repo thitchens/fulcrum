@@ -39,7 +39,8 @@ func main() {
 
 	// Defined in route_main.go
 	mux.HandleFunc("/", rootHandler)
-	// mux.HandleFunc("/authenticate", authenticateHandler)
+	mux.HandleFunc("/login", loginHandler)
+	mux.HandleFunc("/authenticate", authenticateHandler)
 	// mux.HandleFunc("/signup", signupHandler)
 
 	server := &http.Server{
