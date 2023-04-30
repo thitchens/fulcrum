@@ -1,21 +1,10 @@
 :root {
-    /* https://colorhunt.co/palette/7579e79ab3f5a3d8f4b9fffc */
-    /* --bg-color: #7579E7; */
-    /* --header: #9AB3F5; */
-    /* --main: #A3D8F4; */
-    /* --accent: #B9FFFC; */
-
-    /* https://colorhunt.co/palette/f67280c06c846c5b7b355c7d */
-    /* --bg-color: #355C7D; */
-    /* --header: #C06C84; */
-    /* --main: #F67280; */
-    /* --accent: #6C5B7B; */
-
     /* https://colorhunt.co/palette/16213e0f3460533483e94560 */
     --bg-color: #16213E;
     --header: #533483;
-    --main: #E94560;
-    --accent: #0F3460;
+    --main-text: white;
+    --accent1: #0F3460;
+    --accent2: #E94560;
 }
 
 * {
@@ -27,7 +16,7 @@
     border: 0;
     padding: 0;
     background-color: var(--bg-color);
-    color: var(--main);
+    color: var(--main-text);
     box-sizing: border-box;
 }
 
@@ -36,22 +25,29 @@
     background: var(--header);
     width: 100%;
     padding: 14px;
-    position: relative !important;
-    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 9;
+    align-items: flex-start;
     flex-wrap: nowrap;
+    flex-direction: row;
     font-size: 16px;
 }
 
 .header-branding,
 .header-branding-text,
+.header-links-container,
 .header-links,
-.header-login{
+.header-link,
+.header-login {
     display: flex;
     flex: 1;
-    background: transparent;
+    background: var(--header);
 }
 
-.header-branding {
+.header-branding,
+.header-login,
+.header-links {
     max-width: fit-content;
 }
 
@@ -59,22 +55,17 @@
     font-size: 24px;
 }
 
-.header-login {
-    max-width: fit-content;
-}
 .header-links {
     justify-content: left;
 }
 
-.header-links-container {
-    background: transparent;
-    justify-content: left;
+.header-links-spacer {
+    flex: 10;
 }
 
 .header-link {
-    max-width: fit-content;
-    margin-left: 15px;
-    background: transparent;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .header-link:hover {
@@ -83,7 +74,7 @@
 }
 
 .body {
-    display: flex;
-    flex: 1;
-    background: var(--bg-color)
+    margin-top: 100px;
+    background: var(--bg-color);
+    position: relative;
 }
