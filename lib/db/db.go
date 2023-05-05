@@ -68,10 +68,15 @@ func loadConfig() error {
 	return err
 }
 
-func Encrypt(value string) string {
+func HashPassword(value string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
 	if err != nil {
 		log.Error(err.Error())
 	}
 	return string(hash)
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

@@ -28,9 +28,10 @@ type (
 )
 
 func (user *User) Create() error {
-	statement := "INSERT INTO users (uuid, name, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, uuid, created_at"
+	statement := "INSERT INTO users (uuid, name, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, uuid, created_at;"
 
-	err := DatabasePool.QueryRow(context.TODO(), statement, uuid.New(), user.Name, user.Email, Encrypt(user.Password), time.Now().UTC()).Scan(&user.Id, &user.Uuid, &user.CreatedAt)
+	err := DatabasePool.QueryRow(context.TODO(), statement, uuid.New(), user.Name, user.Email, HashPassword(user.Password), time.Now().UTC()).
+		Scan(&user.Id, &user.Uuid, &user.CreatedAt)
 	if err != nil {
 		log.Error(err.Error())
 	}
@@ -38,10 +39,11 @@ func (user *User) Create() error {
 }
 
 func UserByEmail(email string) (*User, error) {
-	statement := "SELECT id, uuid, name, email, password, created_at FROM users WHERE email='$1'"
+	// statement := fmt.Sprintf("SELECT id, uuid, name, email, password, created_at FROM users WHERE email='%s';", email)
 	user := User{}
 
-	err := DatabasePool.QueryRow(context.TODO(), statement, email).Scan(user.Id, user.Uuid, user.Name, user.Email, user.Password, user.CreatedAt)
+	err := DatabasePool.QueryRow(context.TODO(), "SELECT id, uuid, name, email, password, created_at FROM users WHERE email=$1;", email).
+		Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
 
 	return &user, err
 }
