@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/afeeblechild/fulcrum/lib/db"
+	"github.com/afeeblechild/fulcrum/lib/log"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,17 +47,19 @@ func authenticateHandler(w http.ResponseWriter, r *http.Request) {
 
 	user, err := db.UserByEmail(email)
 	if err != nil {
-		fmt.Fprintln(w, err.Error())
+		log.Error(err.Error())
 		return
 	}
 
 	if db.CheckPasswordHash(password, user.Password) {
-		fmt.Fprintln(w, "valid")
-		// TODO invalid password prompt
-		// Would be nice to not actually redirect to this handler until the password is confirmed
-		// That might be too much right now
+		_, err := user.CreateSession()
+		if err != nil {
+			fmt.Fprintln(w, err.Error())
+			log.Error(err.Error())
+			return
+		}
+		r.Response.Re
 	} else {
-		fmt.Fprintln(w, "not valid")
-		// TODO add session to db
+		// Redirect to login page
 	}
 }
